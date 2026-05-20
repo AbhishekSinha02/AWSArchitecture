@@ -1,5 +1,5 @@
 # AI Project — On-Prem to AWS: Data Migration → RAG + Agentic AI + Governance
-> **Interview Target:** CAD 140K+ | Senior Architect / AI Platform Engineer  
+> **Interview Target:**  Senior Architect / AI Platform Engineer  
 > **Pitch Duration:** 15 minutes  
 > **Last Updated:** 2026-05-20
 
