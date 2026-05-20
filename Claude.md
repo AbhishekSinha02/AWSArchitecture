@@ -1,7 +1,7 @@
 # AWS Architecture — Master Reference & Interview Mind Map
 
 > **Purpose:** Living reference for AWS architecture, troubleshooting, networking, data migration, and enterprise use cases.  
-> **Audience:** Senior Architect / Cloud Engineer targeting CAD 140K+  
+> **Audience:** Senior Architect / Cloud Engineer
 > **Update cadence:** Append new sections at bottom; tag with `## [Topic] — Update YYYY-MM-DD`
 
 ---
