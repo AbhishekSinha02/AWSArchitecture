@@ -948,6 +948,71 @@ A: SCP sets maximum permissions for all accounts in an OU — it doesn't grant p
 
 ---
 
+## 17. THINKING FRAMEWORK — Never Default to AWS-Only
+
+> This section exists because defaulting to AWS managed services is a blind spot.
+> Real-world projects — POC (Proof of Concept) and enterprise — use BOTH AWS native
+> services AND open-source tools. Always think in two layers before answering.
+
+### The Two-Layer Rule
+```
+LAYER 1 — OPEN SOURCE (OSS) STACK
+  Ask: "What OSS tool is the industry standard for this problem?"
+  LangChain / LangGraph  → LLM orchestration, agentic workflows
+  LlamaIndex             → RAG (Retrieval-Augmented Generation) data ingestion
+  LangSmith              → LLM observability, tracing, evaluation
+  MLflow                 → ML experiment tracking, model registry
+  Apache Airflow / MWAA  → Workflow orchestration, data pipeline scheduling
+  dbt (data build tool)  → SQL-based data transformation in warehouse
+  Apache Kafka           → High-throughput event streaming
+  Hugging Face           → Pre-trained models, fine-tuning, embeddings
+  RAGAS                  → RAG pipeline evaluation metrics
+
+LAYER 2 — AWS DEPLOYMENT
+  Ask: "Where and how does this OSS tool run on AWS?"
+  LangGraph app    → ECS (Elastic Container Service) Fargate or EC2
+  MLflow server    → EC2 + RDS (metadata) + S3 (artifacts)
+  Airflow          → Amazon MWAA (Managed Workflows for Apache Airflow)
+  Kafka            → Amazon MSK (Managed Streaming for Apache Kafka)
+  HF models        → SageMaker Endpoints or EC2 GPU instances
+  dbt              → runs against Redshift, Athena, or Aurora
+```
+
+### When to Pick OSS vs AWS Native — Quick Guide
+| Problem | OSS Choice | AWS Native Choice | Pick OSS When | Pick Native When |
+|---|---|---|---|---|
+| LLM agent orchestration | LangGraph | Bedrock Agents | Complex branching, cycles, full control | Simple tool use, zero infra management |
+| RAG ingestion | LlamaIndex | Bedrock Knowledge Bases | Custom chunking, 10K+ docs, multi-index | Quick POC, no custom logic needed |
+| LLM observability | LangSmith | CloudWatch + X-Ray | Prompt debugging, RAG eval, dev speed | Regulated env, must stay in AWS |
+| Experiment tracking | MLflow | SageMaker Experiments | Multi-cloud, portability, open ecosystem | AWS-only shop, SageMaker pipeline |
+| Pipeline scheduling | Airflow | Step Functions | Complex DAGs, data engineering teams | Event-driven, serverless, simple flows |
+| Data transformation | dbt | Glue ETL | SQL-first teams, version control, lineage | Spark jobs, non-SQL transformations |
+| Event streaming | Kafka (MSK) | Kinesis | Existing Kafka ecosystem, KSQL | Greenfield AWS, fully managed preferred |
+| Embeddings | sentence-transformers | Bedrock Embeddings | Domain fine-tuning, cost at scale | Managed, no GPU management wanted |
+
+### POC vs Enterprise Stack Reality
+```
+POC (Proof of Concept) — "Show it works in 1-2 weeks"
+  Single EC2 instance (g4dn.xlarge for GPU workloads)
+  LangChain + LlamaIndex + LangSmith
+  S3 + OpenSearch Serverless
+  Bedrock (Claude) for LLM
+  SQLite or DynamoDB for metadata
+  Cost: ~$50-200/month
+
+ENTERPRISE PRODUCTION — "Scale, govern, operate"
+  EKS (Elastic Kubernetes Service) or ECS for containerized services
+  LangGraph (agents) + LlamaIndex (RAG) + LangSmith (observability)
+  S3 Data Lake (Bronze/Silver/Gold) + Glue + Lake Formation
+  Aurora + Redshift + OpenSearch Serverless
+  Bedrock + fine-tuned HuggingFace models on SageMaker
+  MLflow on EC2 + Airflow on MWAA for pipelines
+  Bedrock Guardrails + SageMaker Clarify + CloudTrail for governance
+  Cost: $5,000-50,000+/month depending on scale
+```
+
+---
+
 ## 16. UPDATE LOG
 
 ```
